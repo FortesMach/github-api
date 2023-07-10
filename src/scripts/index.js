@@ -18,7 +18,6 @@ function validateEmptyInput(userName){
     }
 }
 
-// Função para utilizar o enter como "botão"
 document.getElementById('input-search').addEventListener('keyup', (e) => {
     const userName = e.target.value
     const key = e.which || e.keyCode

@@ -14,7 +14,14 @@ const screen = {
                                         </div>`
 
         let repositoriesItens = ""
-        user.repositories.forEach(repo => repositoriesItens += `<li><a href="${repo.html_url}" target="_blank">${repo.name}<br><span class="repo-item">🍴${repo.forks_count}</span><span class="repo-item">⭐${repo.stargazers_count}</span><span class="repo-item">👀${repo.watchers_count}</span><span class="repo-item">🖥️${repo.language}</span></a></li>`)
+        user.repositories.forEach(repo => repositoriesItens += `<li><a href="${repo.html_url}" target="_blank">${repo.name}
+                                                                    <br>
+                                                                    <span class="repo-item">🍴${repo.forks_count || 'Sem Forks'}</span>
+                                                                    <span class="repo-item">⭐${repo.stargazers_count || 'Sem Estrelas'}</span>
+                                                                    <span class="repo-item">👀${repo.watchers_count || 'Sem Espectadores'}</span>
+                                                                    <span class="repo-item">🖥️${repo.language ?? 'Sem Linguagem Definida'}</span>
+                                                                </a></li>`)
+        console.log(repositoriesItens)
 
         if (user.repositories.length > 0) {
             this.userProfile.innerHTML += `<div class = "repositories section">
@@ -24,12 +31,17 @@ const screen = {
         }
 
         let eventsItens = ""
-        if (user.eventis.type === 'CreateEvent' || 'PushEvent') {
-            user.eventis.forEach(even => {
-                if (even.type === 'CreateEvent') { eventsItens += `<li class="event-item"><strong>${even.repo.name}</strong> - ${even.payload.description}</li>` }
-                else if (even.type === 'PushEvent') { eventsItens += `<li class="event-item"><strong>${even.repo.name}</strong> - ${even.payload.commits[0].message}</li>` }
-            })
-        }
+        user.eventis.forEach(element =>{
+            if (element.type === 'PushEvent'){
+                eventsItens += `<li class="event-item">
+                                    <strong>${element.repo.name}</strong> -- ${element.payload.commits[0].message}
+                                </li>`
+            }else{
+                eventsItens += `<li class="event-item">
+                                    <strong>${element.repo.name}</strong> -- ${element.payload.ref_type}
+                                </li>`
+            }
+        })
 
         if (user.eventis.length > 0) {
             this.userProfile.innerHTML += `<div class = "events">
